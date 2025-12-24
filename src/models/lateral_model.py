@@ -53,7 +53,7 @@ class LateralVehicleModel:
 
 def create_lateral_model(vehicle_model: LateralVehicleModel) -> control.NonlinearIOSystem:
     return control.NonlinearIOSystem(
-        vehicle_model.update, vehicle_model.output,
+        vehicle_model.update, None,
         inputs=('u', 'theta'), outputs=("v",),
         name="LateralVehicleModel",
         states=1
