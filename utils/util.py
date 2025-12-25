@@ -18,3 +18,17 @@ def converge[X](values: typing.Iterator[X], done: typing.Callable[[X, X], bool])
         if done(a, b):
             return
         a = b
+
+
+def last[X](values: typing.Iterator[X]) -> typing.Optional[X]:
+    try:
+        *_, last_value = values
+        return last_value
+    except ValueError:
+        return None
+
+def converged[X](values: typing.Iterator[X], done: typing.Callable[[X, X], bool]) -> X:
+    result = last(converge(values, done))
+    if result is None:
+        raise ValueError("End of iterator ")
+    return result
