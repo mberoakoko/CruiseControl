@@ -42,15 +42,20 @@ def _termination_criteria(state_1: ValueIteraState, state_2: ValueIteraState) ->
 type SteppingFunctionType = typing.Callable[[ValueIteraState], ValueIteraState]
 
 def value_iteration_procedure(initial_state: ValueIteraState, params: ValueIterParams) -> typing.Iterator[ValueIteraState]:
-    steping_function: SteppingFunctionType = lambda state: _value_iter_step(state, params)
+    stepping_function: SteppingFunctionType = lambda state: _value_iter_step(state, params)
     return utils.util.converge(
-        values=utils.util.iterate(steping_function, start=initial_state),
+        values=utils.util.iterate(stepping_function, start=initial_state),
         done=_termination_criteria
     )
 
-def optimal_values(inital_state: ValueIteraState, params: ValueIterParams) -> ValueIteraState:
+def optimal_values(initial_state: ValueIteraState, params: ValueIterParams) -> ValueIteraState:
     stepping_function: SteppingFunctionType = lambda state: _value_iter_step(state, params)
     return utils.util.converged[ValueIteraState](
-        values=utils.util.iterate(stepping_function, start=inital_state),
+        values=utils.util.iterate(stepping_function, start=initial_state),
         done=_termination_criteria
     )
+
+type PolicyType[X] = typing.Callable[[X], X]
+
+def create_control_policy[X: NDArray | float](val_iter_state: ValueIteraState) -> PolicyType[X]:
+    return lambda x: val_iter_state.K @ x
